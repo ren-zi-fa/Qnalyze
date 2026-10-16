@@ -1,0 +1,38 @@
+name: Prettier Check
+
+on:
+  push:
+    paths:
+      - "questions-test/**"
+  pull_request:
+    paths:
+      - "questions-test/**"
+
+jobs:
+  prettier:
+    name: Prettier check (questions-test/api)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: questions-test/api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.21.0"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
