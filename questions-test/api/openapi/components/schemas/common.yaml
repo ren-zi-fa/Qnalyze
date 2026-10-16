@@ -1,0 +1,26 @@
+HealthResponse:
+  type: object
+  required:
+    - status
+  properties:
+    status:
+      type: string
+      example: ok
+
+Error:
+  type: object
+  required:
+    - message
+  properties:
+    message:
+      type: string
+      example: Terjadi kesalahan
+    errors:
+      type: array
+      items:
+        type: object
+        properties:
+          field:
+            type: string
+          message:
+            type: string

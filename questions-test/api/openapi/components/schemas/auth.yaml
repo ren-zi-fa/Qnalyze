@@ -1,0 +1,45 @@
+RegisterRequest:
+  type: object
+  required:
+    - email
+    - password
+  properties:
+    name:
+      type: string
+      example: Renzi
+    email:
+      type: string
+      format: email
+      example: renzi@example.com
+    password:
+      type: string
+      format: password
+      minLength: 8
+      example: secret123
+
+LoginRequest:
+  type: object
+  required:
+    - email
+    - password
+  properties:
+    email:
+      type: string
+      format: email
+      example: renzi@example.com
+    password:
+      type: string
+      format: password
+      example: secret123
+
+AuthResponse:
+  type: object
+  required:
+    - token
+    - user
+  properties:
+    token:
+      type: string
+      description: JWT untuk header Authorization Bearer
+    user:
+      $ref: ./user.yaml#/User

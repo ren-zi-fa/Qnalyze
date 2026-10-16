@@ -1,0 +1,40 @@
+get:
+  tags:
+    - Questions
+  summary: List questions dengan paginasi
+  operationId: listQuestions
+  parameters:
+    - $ref: ../../components/parameters.yaml#/PageParam
+    - $ref: ../../components/parameters.yaml#/LimitParam
+    - $ref: ../../components/parameters.yaml#/SearchParam
+  responses:
+    '200':
+      description: Daftar questions
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/question.yaml#/PaginatedQuestions
+    '401':
+      $ref: ../../components/responses.yaml#/Unauthorized
+post:
+  tags:
+    - Questions
+  summary: Buat question baru
+  operationId: createQuestion
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/question.yaml#/CreateQuestionRequest
+  responses:
+    '201':
+      description: Question berhasil dibuat
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/question.yaml#/Question
+    '400':
+      $ref: ../../components/responses.yaml#/ValidationError
+    '401':
+      $ref: ../../components/responses.yaml#/Unauthorized

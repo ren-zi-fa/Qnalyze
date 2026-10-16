@@ -1,0 +1,27 @@
+post:
+  tags:
+    - Auth
+  summary: Daftarkan user baru
+  operationId: registerUser
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/auth.yaml#/RegisterRequest
+  responses:
+    '201':
+      description: User berhasil dibuat
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/auth.yaml#/AuthResponse
+    '400':
+      $ref: ../../components/responses.yaml#/ValidationError
+    '409':
+      description: Email sudah terdaftar
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common.yaml#/Error

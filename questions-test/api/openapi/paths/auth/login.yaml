@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Auth
+  summary: Login dan dapatkan token
+  operationId: loginUser
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/auth.yaml#/LoginRequest
+  responses:
+    '200':
+      description: Login berhasil
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/auth.yaml#/AuthResponse
+    '400':
+      $ref: ../../components/responses.yaml#/ValidationError
+    '401':
+      $ref: ../../components/responses.yaml#/Unauthorized

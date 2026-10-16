@@ -1,0 +1,58 @@
+get:
+  tags:
+    - Questions
+  summary: Ambil satu question
+  operationId: getQuestionById
+  parameters:
+    - $ref: ../../components/parameters.yaml#/IdParam
+  responses:
+    '200':
+      description: Detail question
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/question.yaml#/Question
+    '401':
+      $ref: ../../components/responses.yaml#/Unauthorized
+    '404':
+      $ref: ../../components/responses.yaml#/NotFound
+patch:
+  tags:
+    - Questions
+  summary: Update sebagian question
+  operationId: updateQuestion
+  parameters:
+    - $ref: ../../components/parameters.yaml#/IdParam
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/question.yaml#/UpdateQuestionRequest
+  responses:
+    '200':
+      description: Question berhasil diupdate
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/question.yaml#/Question
+    '400':
+      $ref: ../../components/responses.yaml#/ValidationError
+    '401':
+      $ref: ../../components/responses.yaml#/Unauthorized
+    '404':
+      $ref: ../../components/responses.yaml#/NotFound
+delete:
+  tags:
+    - Questions
+  summary: Hapus question
+  operationId: deleteQuestion
+  parameters:
+    - $ref: ../../components/parameters.yaml#/IdParam
+  responses:
+    '204':
+      description: Question berhasil dihapus
+    '401':
+      $ref: ../../components/responses.yaml#/Unauthorized
+    '404':
+      $ref: ../../components/responses.yaml#/NotFound

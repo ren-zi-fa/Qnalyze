@@ -1,0 +1,18 @@
+Unauthorized:
+  description: Token tidak ada atau tidak valid
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas/common.yaml#/Error
+NotFound:
+  description: Resource tidak ditemukan
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas/common.yaml#/Error
+ValidationError:
+  description: Validasi request gagal
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas/common.yaml#/Error

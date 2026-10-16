@@ -1,0 +1,19 @@
+User:
+  type: object
+  required:
+    - id
+    - email
+  properties:
+    id:
+      type: string
+      example: u_01j9x7t3f5a2b3c4d5e6f7g8h9
+    name:
+      type: string
+      example: Renzi
+    email:
+      type: string
+      format: email
+      example: renzi@example.com
+    createdAt:
+      type: string
+      format: date-time

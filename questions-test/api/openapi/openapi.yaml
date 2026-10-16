@@ -1,0 +1,75 @@
+openapi: 3.2.0
+info:
+  title: Qnalyze Questions Test API
+  version: 1.0.0
+  description: Kerangka awal API questions-test. Auth berbasis Bearer JWT, resource utama Questions.
+servers:
+  - url: http://localhost:3000
+    description: Local development
+tags:
+  - name: Health
+    description: Cek status service
+  - name: Auth
+    description: Register dan login
+  - name: Users
+    description: Profil user yang sedang login
+  - name: Questions
+    description: CRUD questions
+paths:
+  /health:
+    $ref: ./paths/health.yaml
+  /auth/register:
+    $ref: ./paths/auth/register.yaml
+  /auth/login:
+    $ref: ./paths/auth/login.yaml
+  /users/me:
+    $ref: ./paths/users/me.yaml
+  /questions:
+    $ref: ./paths/questions/collection.yaml
+  /questions/{id}:
+    $ref: ./paths/questions/by-id.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    IdParam:
+      $ref: ./components/parameters.yaml#/IdParam
+    PageParam:
+      $ref: ./components/parameters.yaml#/PageParam
+    LimitParam:
+      $ref: ./components/parameters.yaml#/LimitParam
+    SearchParam:
+      $ref: ./components/parameters.yaml#/SearchParam
+  responses:
+    Unauthorized:
+      $ref: ./components/responses.yaml#/Unauthorized
+    NotFound:
+      $ref: ./components/responses.yaml#/NotFound
+    ValidationError:
+      $ref: ./components/responses.yaml#/ValidationError
+  schemas:
+    HealthResponse:
+      $ref: ./components/schemas/common.yaml#/HealthResponse
+    Error:
+      $ref: ./components/schemas/common.yaml#/Error
+    RegisterRequest:
+      $ref: ./components/schemas/auth.yaml#/RegisterRequest
+    LoginRequest:
+      $ref: ./components/schemas/auth.yaml#/LoginRequest
+    AuthResponse:
+      $ref: ./components/schemas/auth.yaml#/AuthResponse
+    User:
+      $ref: ./components/schemas/user.yaml#/User
+    Question:
+      $ref: ./components/schemas/question.yaml#/Question
+    CreateQuestionRequest:
+      $ref: ./components/schemas/question.yaml#/CreateQuestionRequest
+    UpdateQuestionRequest:
+      $ref: ./components/schemas/question.yaml#/UpdateQuestionRequest
+    PaginatedQuestions:
+      $ref: ./components/schemas/question.yaml#/PaginatedQuestions
+security:
+  - bearerAuth: []

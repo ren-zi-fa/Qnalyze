@@ -1,0 +1,63 @@
+Question:
+  type: object
+  required:
+    - id
+    - title
+  properties:
+    id:
+      type: string
+      example: q_01j9x7t3f5a2b3c4d5e6f7g8h9
+    title:
+      type: string
+      example: Apa ibu kota Indonesia?
+    body:
+      type: string
+      example: Pilih satu jawaban yang benar.
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+CreateQuestionRequest:
+  type: object
+  required:
+    - title
+  properties:
+    title:
+      type: string
+      example: Apa ibu kota Indonesia?
+    body:
+      type: string
+      example: Pilih satu jawaban yang benar.
+
+UpdateQuestionRequest:
+  type: object
+  properties:
+    title:
+      type: string
+    body:
+      type: string
+
+PaginatedQuestions:
+  type: object
+  required:
+    - data
+    - page
+    - limit
+    - total
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '#/Question'
+    page:
+      type: integer
+      example: 1
+    limit:
+      type: integer
+      example: 10
+    total:
+      type: integer
+      example: 42

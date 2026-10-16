@@ -1,0 +1,13 @@
+get:
+  tags:
+    - Health
+  summary: Cek kesehatan API
+  operationId: getHealth
+  security: []
+  responses:
+    '200':
+      description: API berjalan normal
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/common.yaml#/HealthResponse
