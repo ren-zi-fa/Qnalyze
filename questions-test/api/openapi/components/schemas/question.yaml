@@ -51,7 +51,7 @@ PaginatedQuestions:
     data:
       type: array
       items:
-        $ref: '#/Question'
+        $ref: "#/Question"
     page:
       type: integer
       example: 1

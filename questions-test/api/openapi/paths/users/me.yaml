@@ -4,11 +4,11 @@ get:
   summary: Ambil profil sendiri
   operationId: getCurrentUser
   responses:
-    '200':
+    "200":
       description: Profil user
       content:
         application/json:
           schema:
             $ref: ../../components/schemas/user.yaml#/User
-    '401':
+    "401":
       $ref: ../../components/responses.yaml#/Unauthorized

@@ -5,7 +5,7 @@ get:
   operationId: getHealth
   security: []
   responses:
-    '200':
+    "200":
       description: API berjalan normal
       content:
         application/json:

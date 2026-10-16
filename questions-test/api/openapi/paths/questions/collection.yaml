@@ -8,13 +8,13 @@ get:
     - $ref: ../../components/parameters.yaml#/LimitParam
     - $ref: ../../components/parameters.yaml#/SearchParam
   responses:
-    '200':
+    "200":
       description: Daftar questions
       content:
         application/json:
           schema:
             $ref: ../../components/schemas/question.yaml#/PaginatedQuestions
-    '401':
+    "401":
       $ref: ../../components/responses.yaml#/Unauthorized
 post:
   tags:
@@ -28,13 +28,13 @@ post:
         schema:
           $ref: ../../components/schemas/question.yaml#/CreateQuestionRequest
   responses:
-    '201':
+    "201":
       description: Question berhasil dibuat
       content:
         application/json:
           schema:
             $ref: ../../components/schemas/question.yaml#/Question
-    '400':
+    "400":
       $ref: ../../components/responses.yaml#/ValidationError
-    '401':
+    "401":
       $ref: ../../components/responses.yaml#/Unauthorized
