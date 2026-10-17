@@ -21,15 +21,10 @@ type Credentials = {
 export async function register(req: Request, res: Response): Promise<void> {
   const { name, email, password } = req.body as Credentials;
 
-  const existing = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email));
+  const existing = await db.select().from(users).where(eq(users.email, email));
 
   if (existing.length > 0) {
-    res
-      .status(HttpStatus.CONFLICT)
-      .json({ message: "Email sudah terdaftar" });
+    res.status(HttpStatus.CONFLICT).json({ message: "Email sudah terdaftar" });
     return;
   }
 
@@ -62,18 +57,14 @@ export async function login(req: Request, res: Response): Promise<void> {
   const [user] = await db.select().from(users).where(eq(users.email, email));
 
   if (!user) {
-    res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ message: "Email atau password salah" });
+    res.status(HttpStatus.UNAUTHORIZED).json({ message: "Email atau password salah" });
     return;
   }
 
   const passwordValid = await compare(password, user.password);
 
   if (!passwordValid) {
-    res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ message: "Email atau password salah" });
+    res.status(HttpStatus.UNAUTHORIZED).json({ message: "Email atau password salah" });
     return;
   }
 

@@ -15,7 +15,5 @@ export function validate(req: Request, res: Response, next: NextFunction): void 
     message: error.msg,
   }));
 
-  res
-    .status(HttpStatus.BAD_REQUEST)
-    .json({ message: "Validasi request gagal", errors });
+  res.status(HttpStatus.BAD_REQUEST).json({ message: "Validasi request gagal", errors });
 }

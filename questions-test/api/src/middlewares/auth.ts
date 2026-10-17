@@ -9,35 +9,25 @@ export type AuthenticatedRequest = Request & {
   user: (typeof users)["$inferSelect"];
 };
 
-export async function requireAuth(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> {
+export async function requireAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
   const token = req.cookies[SESSION_COOKIE_NAME] as string | undefined;
 
   if (!token) {
-    res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ message: "Tidak terautentikasi" });
+    res.status(HttpStatus.UNAUTHORIZED).json({ message: "Tidak terautentikasi" });
     return;
   }
 
   const [session] = await db.select().from(sessions).where(eq(sessions.id, token));
 
   if (!session || session.expiresAt.getTime() <= Date.now()) {
-    res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ message: "Session tidak valid atau kedaluwarsa" });
+    res.status(HttpStatus.UNAUTHORIZED).json({ message: "Session tidak valid atau kedaluwarsa" });
     return;
   }
 
   const [user] = await db.select().from(users).where(eq(users.id, session.userId));
 
   if (!user) {
-    res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ message: "Session tidak valid atau kedaluwarsa" });
+    res.status(HttpStatus.UNAUTHORIZED).json({ message: "Session tidak valid atau kedaluwarsa" });
     return;
   }
 

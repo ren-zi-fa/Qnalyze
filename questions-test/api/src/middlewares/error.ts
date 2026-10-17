@@ -1,9 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import {
-  HttpStatus,
-  type HttpStatusCode,
-  isServerError,
-} from "@/utils/http-status.js";
+import { HttpStatus, type HttpStatusCode, isServerError } from "@/utils/http-status.js";
 import { logger } from "@/utils/logger.js";
 
 const SERVER_ERROR_MESSAGE = "Terjadi kesalahan pada server";
@@ -26,12 +22,7 @@ export function notFoundHandler(_req: Request, res: Response): void {
 }
 
 /** Error handler terakhir: mengubah error apa pun menjadi JSON yang konsisten. */
-export function errorHandler(
-  err: unknown,
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-): void {
+export function errorHandler(err: unknown, _req: Request, res: Response, next: NextFunction): void {
   // Respons sudah terkirim: serahkan ke handler default Express.
   if (res.headersSent) {
     next(err);
