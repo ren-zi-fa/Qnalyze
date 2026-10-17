@@ -1,0 +1,40 @@
+# Stack untuk tim: build image API dari Dockerfile lokal + Postgres, lalu semua jalan di localhost.
+# Cara pakai:  docker compose up -d
+# Kredensial DB bisa dioverride lewat env: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+
+services:
+  database:
+    container_name: qnalyze_db
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-qnalyz_db}
+    volumes:
+      - qnalyze_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-qnalyz_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    container_name: qnalyze_api
+    build:
+      context: ./questions-test/api
+      dockerfile: Dockerfile
+    image: qnalyze-api:latest
+    ports:
+      - "3100:3100"
+    environment:
+      PORT: 3100
+      DATABASE_URL: postgresql://${POSTGRES_USER:-root}:${POSTGRES_PASSWORD:-root}@database:5432/${POSTGRES_DB:-qnalyz_db}
+      LOG_LEVEL: info
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  qnalyze_pg_data:

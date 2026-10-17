@@ -29,6 +29,13 @@ async function seed() {
     "Seeded users",
   );
 
+  const existingQuestions = await db.select().from(questions).limit(1);
+
+  if (existingQuestions.length > 0) {
+    logger.info("Questions already seeded, skipping.");
+    return;
+  }
+
   const seededQuestions = await db
     .insert(questions)
     .values([
