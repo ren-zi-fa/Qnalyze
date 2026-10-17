@@ -1,7 +1,7 @@
 post:
   tags:
     - Auth
-  summary: Login dan dapatkan token
+  summary: Login dan buat session cookie
   operationId: loginUser
   security: []
   requestBody:
@@ -12,7 +12,13 @@ post:
           $ref: ../../components/schemas/auth.yaml#/LoginRequest
   responses:
     "200":
-      description: Login berhasil
+      description: Login berhasil, session dibuat dan dikirim via cookie
+      headers:
+        Set-Cookie:
+          description: Cookie session (HttpOnly, Secure, SameSite). Session ID disimpan di sisi server.
+          schema:
+            type: string
+            example: sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/
       content:
         application/json:
           schema:

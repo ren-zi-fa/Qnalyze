@@ -12,7 +12,13 @@ post:
           $ref: ../../components/schemas/auth.yaml#/RegisterRequest
   responses:
     "201":
-      description: User berhasil dibuat
+      description: User berhasil dibuat dan session dibuat via cookie
+      headers:
+        Set-Cookie:
+          description: Cookie session (HttpOnly, Secure, SameSite). Session ID disimpan di sisi server.
+          schema:
+            type: string
+            example: sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/
       content:
         application/json:
           schema:

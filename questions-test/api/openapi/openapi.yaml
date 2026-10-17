@@ -2,9 +2,9 @@ openapi: 3.2.0
 info:
   title: Qnalyze Questions Test API
   version: 1.0.0
-  description: Kerangka awal API questions-test. Auth berbasis Bearer JWT, resource utama Questions.
+  description: Kerangka awal API questions-test. Auth berbasis cookie session, resource utama Questions.
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3100
     description: Local development
 tags:
   - name: Health
@@ -22,6 +22,8 @@ paths:
     $ref: ./paths/auth/register.yaml
   /auth/login:
     $ref: ./paths/auth/login.yaml
+  /auth/logout:
+    $ref: ./paths/auth/logout.yaml
   /users/me:
     $ref: ./paths/users/me.yaml
   /questions:
@@ -30,10 +32,11 @@ paths:
     $ref: ./paths/questions/by-id.yaml
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie session yang dikirim otomatis oleh browser setelah login
   parameters:
     IdParam:
       $ref: ./components/parameters.yaml#/IdParam
@@ -72,4 +75,4 @@ components:
     PaginatedQuestions:
       $ref: ./components/schemas/question.yaml#/PaginatedQuestions
 security:
-  - bearerAuth: []
+  - cookieAuth: []

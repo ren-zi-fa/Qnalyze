@@ -35,11 +35,8 @@ LoginRequest:
 AuthResponse:
   type: object
   required:
-    - token
     - user
   properties:
-    token:
-      type: string
-      description: JWT untuk header Authorization Bearer
     user:
       $ref: ./user.yaml#/User
+      description: Data user. Session dibuat di sisi server dan dikirim via cookie `Set-Cookie`.

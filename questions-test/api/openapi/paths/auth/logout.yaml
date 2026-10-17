@@ -1,0 +1,16 @@
+post:
+  tags:
+    - Auth
+  summary: Logout dan hapus session
+  operationId: logoutUser
+  responses:
+    "204":
+      description: Logout berhasil, session cookie dihapus/diexpire
+      headers:
+        Set-Cookie:
+          description: Cookie session dikosongkan dan di-expire oleh server.
+          schema:
+            type: string
+            example: sid=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
+    "401":
+      $ref: ../../components/responses.yaml#/Unauthorized
