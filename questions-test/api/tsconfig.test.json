@@ -1,0 +1,11 @@
+{
+  // Konfigurasi typecheck untuk file test (tidak ikut build produksi).
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["src", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}
