@@ -12,11 +12,11 @@ app.use(cookieParser());
 
 registerDocs(app);
 
-app.get("/health", (_req, res) => {
+app.get("/api/health", (_req, res) => {
   res.status(HttpStatus.OK).json({ status: "ok" });
 });
 
-app.use(router);
+app.use("/api", router);
 
 app.use(notFoundHandler);
 

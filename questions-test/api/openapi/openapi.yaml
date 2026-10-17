@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Kerangka awal API questions-test. Auth berbasis cookie session, resource utama Questions.
 servers:
-  - url: http://localhost:3100
+  - url: http://localhost:3100/api
     description: Local development
 tags:
   - name: Health
@@ -16,19 +16,19 @@ tags:
   - name: Questions
     description: CRUD questions
 paths:
-  /health:
+  /api/health:
     $ref: ./paths/health.yaml
-  /auth/register:
+  /api/auth/register:
     $ref: ./paths/auth/register.yaml
-  /auth/login:
+  /api/auth/login:
     $ref: ./paths/auth/login.yaml
-  /auth/logout:
+  /api/auth/logout:
     $ref: ./paths/auth/logout.yaml
-  /users/me:
+  /api/users/me:
     $ref: ./paths/users/me.yaml
-  /questions:
+  /api/questions:
     $ref: ./paths/questions/collection.yaml
-  /questions/{id}:
+  /api/questions/{id}:
     $ref: ./paths/questions/by-id.yaml
 components:
   securitySchemes:

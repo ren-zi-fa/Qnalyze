@@ -15,7 +15,7 @@ docker compose up -d
 1. Build image API dari `questions-test/api/Dockerfile` (tidak perlu push ke registry).
 2. Menjalankan Postgres + API.
 
-- API: `http://localhost:3100` (cek `GET /health`)
+- API: `http://localhost:3100/api` (cek `GET /api/health`)
 - Database (Postgres): `localhost:5432`
 
 Saat container API pertama kali start, migrasi (`drizzle`) dan seeding otomatis dijalankan lebih dulu.
