@@ -12,6 +12,12 @@
       "sourceType": "github",
       "skillPath": "plugins/developer-kit-typescript/skills/drizzle-orm-patterns/SKILL.md",
       "computedHash": "d63e6d73a9f579b505a5694af2f3b3200c2b5eeea147e88b9b6d1e5fce23bcbb"
+    },
+    "git-commit": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/git-commit/SKILL.md",
+      "computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21"
     }
   }
 }
