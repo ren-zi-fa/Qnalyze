@@ -8,8 +8,7 @@ User:
       type: integer
       example: 1
     name:
-      type: string
-      nullable: true
+      type: [string, "null"]
       example: Renzi
     email:
       type: string
@@ -34,8 +33,7 @@ AdminUser:
       type: integer
       example: 1
     name:
-      type: string
-      nullable: true
+      type: [string, "null"]
       example: Renzi
     email:
       type: string
@@ -60,9 +58,8 @@ AdminUser:
       type: string
       format: date-time
     lastActive:
-      type: string
+      type: [string, "null"]
       format: date-time
-      nullable: true
 
 UpdateUserRequest:
   type: object

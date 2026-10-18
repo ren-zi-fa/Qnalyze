@@ -108,17 +108,15 @@ Attempt:
       type: string
       format: date-time
     finishedAt:
-      type: string
+      type: [string, "null"]
       format: date-time
-      nullable: true
+
     score:
-      type: integer
-      nullable: true
+      type: [integer, "null"]
       description: Nilai 0-100, terisi setelah selesai
       example: 80
     correct:
-      type: integer
-      nullable: true
+      type: [integer, "null"]
       description: Jumlah jawaban benar, terisi setelah selesai
       example: 8
     total:
@@ -126,8 +124,7 @@ Attempt:
       description: Jumlah soal dalam paket
       example: 10
     durationMinutes:
-      type: number
-      nullable: true
+      type: [number, "null"]
       description: Durasi pengerjaan dalam menit, terisi setelah selesai
       example: 17.5
     questions:
