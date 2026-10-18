@@ -132,7 +132,11 @@ describe("POST /api/questions/import", () => {
     });
 
     it("menolak berkas yang bukan Excel valid (400)", async () => {
-      const response = await uploadWorkbook(Buffer.from("ini bukan excel"), "soal.xlsx", adminCookie);
+      const response = await uploadWorkbook(
+        Buffer.from("ini bukan excel"),
+        "soal.xlsx",
+        adminCookie,
+      );
 
       expect(response.status).toBe(400);
     });

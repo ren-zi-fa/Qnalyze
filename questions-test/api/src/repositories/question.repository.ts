@@ -10,10 +10,7 @@ export type ImportContext = {
 };
 
 /** Kode soal yang sudah ada di bank soal. */
-export async function findCodes(
-  codes: string[],
-  executor: Executor = db,
-): Promise<Set<string>> {
+export async function findCodes(codes: string[], executor: Executor = db): Promise<Set<string>> {
   if (codes.length === 0) {
     return new Set();
   }

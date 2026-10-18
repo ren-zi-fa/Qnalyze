@@ -19,9 +19,7 @@ type ImportValidationContext = {
 };
 
 /** Hasil validasi satu baris soal. */
-type RowValidation =
-  | { ok: true; categoryId: number }
-  | { ok: false; messages: string[] };
+type RowValidation = { ok: true; categoryId: number } | { ok: false; messages: string[] };
 
 /**
  * Impor soal massal dari buffer berkas Excel.
