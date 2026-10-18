@@ -198,6 +198,73 @@ UpdateQuestionRequest:
       type: string
       example: Jakarta adalah ibu kota Indonesia.
 
+ImportedQuestion:
+  type: object
+  description: >-
+    Soal hasil parsing Excel sebelum disimpan. Struktur mengikuti
+    Question tanpa id, createdAt, updatedAt; categoryId belum dimiliki
+    sehingga masih berupa nama kategori.
+  required:
+    - code
+    - text
+    - category
+    - type
+    - difficulty
+    - status
+    - options
+    - answer
+  properties:
+    code:
+      type: string
+      example: Q-LG-001
+    text:
+      type: string
+      example: Apa ibu kota Indonesia?
+    category:
+      type: string
+      description: Nama kategori, dipetakan ke categoryId saat penyimpanan
+      example: Penalaran Verbal
+    type:
+      type: string
+      enum:
+        - Pilihan Ganda
+        - Benar/Salah
+        - Isian Singkat
+      example: Pilihan Ganda
+    difficulty:
+      type: string
+      enum:
+        - Mudah
+        - Sedang
+        - Sulit
+      example: Mudah
+    status:
+      type: string
+      enum:
+        - Terbit
+        - Draf
+      example: Terbit
+    options:
+      type: array
+      items:
+        type: object
+        required:
+          - key
+          - text
+        properties:
+          key:
+            type: string
+            example: A
+          text:
+            type: string
+            example: Jakarta
+    answer:
+      type: string
+      example: A
+    explanation:
+      type: string
+      example: Jakarta adalah ibu kota Indonesia.
+
 ImportQuestionsResponse:
   type: object
   description: Hasil impor soal dari berkas Excel.
@@ -207,9 +274,11 @@ ImportQuestionsResponse:
   properties:
     imported:
       type: integer
+      description: Jumlah baris berhasil diparsing
       example: 42
     failed:
       type: integer
+      description: Jumlah baris gagal
       example: 2
     errors:
       type: array
@@ -226,6 +295,11 @@ ImportQuestionsResponse:
           message:
             type: string
             example: Kolom jawaban kosong
+    data:
+      type: array
+      description: Soal-soal yang berhasil disimpan ke bank soal
+      items:
+        $ref: "#/Question"
 
 PaginatedQuestions:
   type: object

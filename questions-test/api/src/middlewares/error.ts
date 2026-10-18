@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { HttpStatus, type HttpStatusCode, isServerError } from "@/utils/http-status.js";
-import { logger } from "@/utils/logger.js";
+import { HttpStatus, type HttpStatusCode, isServerError } from "../utils/http-status.js";
+import { logger } from "../utils/logger.js";
 
 const SERVER_ERROR_MESSAGE = "Terjadi kesalahan pada server";
 const FALLBACK_CLIENT_ERROR_MESSAGE = "Request tidak dapat diproses";

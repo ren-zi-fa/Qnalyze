@@ -1,8 +1,8 @@
-import "@/config/env.js";
+import "../config/env.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { logger } from "@/utils/logger.js";
+import { logger } from "../utils/logger.js";
 import { db } from "./index.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));

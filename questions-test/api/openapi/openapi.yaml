@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Kerangka awal API questions-test. Auth berbasis cookie session, resource utama Questions.
 servers:
-  - url: http://localhost:3100/api
+  - url: http://localhost:3100
     description: Local development
 tags:
   - name: Health

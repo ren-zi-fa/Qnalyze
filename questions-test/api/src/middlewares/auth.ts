@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import type { NextFunction, Request, Response } from "express";
-import { db } from "@/db/index.js";
-import { sessions, users } from "@/db/schema.js";
-import { HttpStatus } from "@/utils/http-status.js";
-import { SESSION_COOKIE_NAME } from "@/utils/session.js";
+import { db } from "../db/index.js";
+import { sessions, users } from "../db/schema.js";
+import { HttpStatus } from "../utils/http-status.js";
+import { SESSION_COOKIE_NAME } from "../utils/session.js";
 
 export type AuthenticatedRequest = Request & {
   user: (typeof users)["$inferSelect"];
@@ -32,5 +32,17 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   }
 
   (req as AuthenticatedRequest).user = user;
+  next();
+}
+
+/** Hanya melanjutkan request dari pengguna berperan admin. */
+export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
+  const { user } = req as AuthenticatedRequest;
+
+  if (user.role !== "admin") {
+    res.status(HttpStatus.FORBIDDEN).json({ message: "Hanya admin yang diizinkan" });
+    return;
+  }
+
   next();
 }

@@ -1,4 +1,4 @@
-import "@/config/env.js";
+import "../config/env.js";
 import pino from "pino";
 
 export const logger = pino({

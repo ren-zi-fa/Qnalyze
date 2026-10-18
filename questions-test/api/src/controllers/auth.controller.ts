@@ -1,16 +1,16 @@
 import { compare, hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import type { Request, Response } from "express";
-import { db } from "@/db/index.js";
-import { sessions, users } from "@/db/schema.js";
-import { HttpStatus } from "@/utils/http-status.js";
+import { db } from "../db/index.js";
+import { sessions, users } from "../db/schema.js";
+import { HttpStatus } from "../utils/http-status.js";
 import {
   generateSessionToken,
   SESSION_COOKIE_NAME,
   sessionCookieOptions,
   sessionExpiresAt,
-} from "@/utils/session.js";
-import { toPublicUser } from "@/utils/user.js";
+} from "../utils/session.js";
+import { toPublicUser } from "../utils/user.js";
 
 type Credentials = {
   name?: string;
