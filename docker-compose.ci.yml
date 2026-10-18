@@ -1,0 +1,10 @@
+# Override untuk CI / `act`: jangan publish port ke host.
+# Smoke test dilakukan lewat `docker compose exec` di dalam jaringan compose,
+# sehingga tidak perlu port host dan tidak bentrok dengan dev server lokal.
+services:
+  database:
+    ports: !reset []
+  api:
+    ports: !reset []
+  ui:
+    ports: !reset []

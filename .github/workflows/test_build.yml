@@ -1,0 +1,77 @@
+name: test_build
+
+on:
+  push:
+    paths:
+      - "questions-test/api/**"
+      - "questions-test/ui/**"
+      - "docker-compose.yml"
+      - "docker-compose.ci.yml"
+      - ".github/workflows/test_build.yml"
+  pull_request:
+    paths:
+      - "questions-test/api/**"
+      - "questions-test/ui/**"
+      - "docker-compose.yml"
+      - "docker-compose.ci.yml"
+      - ".github/workflows/test_build.yml"
+
+jobs:
+  docker:
+    name: Build & smoke test (API + UI)
+    runs-on: ubuntu-latest
+
+    env:
+      # Override CI: jangan publish port ke host, sehingga tidak bentrok
+      # dengan dev server lokal saat dijalankan lewat `act`.
+      COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: qnalyz_db
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build images (api + ui)
+        run: docker compose build
+
+      - name: Start stack (database + api + ui)
+        run: docker compose up -d
+
+      - name: Smoke test API
+        run: |
+          echo "Menunggu API siap di http://localhost:3100/api/health ..."
+          for i in $(seq 1 30); do
+            if docker compose exec -T api node -e 'fetch("http://localhost:3100/api/health", { signal: AbortSignal.timeout(5000) }).then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))'; then
+              echo
+              echo "API siap."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "API tidak siap dalam waktu yang ditentukan."
+          docker compose logs api
+          exit 1
+
+      - name: Smoke test UI
+        run: |
+          echo "Menunggu UI siap di http://localhost:3001 ..."
+          for i in $(seq 1 30); do
+            if docker compose exec -T ui node -e 'fetch("http://localhost:3001", { signal: AbortSignal.timeout(5000) }).then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))'; then
+              echo "UI siap (HTTP 200)."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "UI tidak siap dalam waktu yang ditentukan."
+          docker compose logs ui
+          exit 1
+
+      - name: Dump logs (on failure)
+        if: failure()
+        run: docker compose logs
+
+      - name: Tear down stack
+        if: always()
+        run: docker compose down -v --remove-orphans

@@ -36,5 +36,22 @@ services:
       database:
         condition: service_healthy
 
+  ui:
+    container_name: qnalyze_ui
+    build:
+      context: ./questions-test/ui
+      dockerfile: Dockerfile
+      args:
+        # Rewrites /api/* di next.config.ts diarahkan ke service API.
+        API_BASE_URL: http://api:3100
+    image: qnalyze-ui:latest
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      HOSTNAME: 0.0.0.0
+    depends_on:
+      - api
+
 volumes:
   qnalyze_pg_data:
