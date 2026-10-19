@@ -5,39 +5,123 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    reviewers: ["ren-zi-fa", "fathur021"]
+    assignees: ["ren-zi-fa"]
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
 
   # API (pnpm)
   - package-ecosystem: "npm"
     directory: "/questions-test/api"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    reviewers: ["ren-zi-fa", "fathur021"]
+    assignees: ["ren-zi-fa"]
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
 
   # UI (pnpm)
   - package-ecosystem: "npm"
     directory: "/questions-test/ui"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    reviewers: ["ren-zi-fa", "fathur021"]
+    assignees: ["ren-zi-fa"]
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
 
-  # Docker images
+  # Docker images (root)
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    reviewers: ["ren-zi-fa", "fathur021"]
+    assignees: ["ren-zi-fa"]
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
 
   # Docker images (API)
   - package-ecosystem: "docker"
     directory: "/questions-test/api"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    reviewers: ["ren-zi-fa", "fathur021"]
+    assignees: ["ren-zi-fa"]
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
 
   # Docker images (UI)
   - package-ecosystem: "docker"
     directory: "/questions-test/ui"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    reviewers: ["ren-zi-fa", "fathur021"]
+    assignees: ["ren-zi-fa"]
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
