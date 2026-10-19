@@ -5,7 +5,6 @@ import {
   deleteQuestionsByCodes,
   deleteUsers,
   ensureCategory,
-  ensureQuestion,
   startTestServer,
   type TestServer,
 } from "./helpers/integration.js";
