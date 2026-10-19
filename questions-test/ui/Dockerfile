@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ================= Build stage =================
-FROM node:24.21.0-slim AS build
+FROM node:24.22.0-slim AS build
 
 # Pasang pnpm versi yang dipakai proyek
 RUN npm install -g pnpm@12.14.0
@@ -23,7 +23,7 @@ ENV API_BASE_URL=${API_BASE_URL}
 RUN pnpm build
 
 # ================= Runtime stage =================
-FROM node:24.21.0-slim AS runtime
+FROM node:24.22.0-slim AS runtime
 
 ENV NODE_ENV=production
 WORKDIR /app
