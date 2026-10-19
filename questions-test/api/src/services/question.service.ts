@@ -1,5 +1,14 @@
 import type { NewQuestion, Question } from "../db/schema.js";
-import { findImportContext, insertMany } from "../repositories/question.repository.js";
+import { findById as findCategoryById } from "../repositories/category.repository.js";
+import {
+  create as createQuestionRow,
+  findImportContext,
+  findById as findQuestionById,
+  insertMany,
+  list as listQuestionsRepository,
+  type QuestionListFilters,
+  remove as removeQuestionRow,
+} from "../repositories/question.repository.js";
 import type { ExcelImportError, ParsedEntry, ParsedQuestion } from "../types/question.js";
 import { parseQuestionsWorkbook } from "../utils/excel.js";
 
@@ -159,6 +168,85 @@ function validateRow(question: ParsedQuestion, context: ImportValidationContext)
   return { ok: true, categoryId };
 }
 
+export type PaginatedQuestions = {
+  data: Question[];
+  page: number;
+  limit: number;
+  total: number;
+};
+
+/** Daftar soal dengan paginasi dan filter. */
+export async function listQuestions(filters: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  categoryId?: number;
+  difficulty?: string;
+  status?: string;
+}): Promise<PaginatedQuestions> {
+  const page = filters.page ?? 1;
+  const limit = filters.limit ?? 10;
+
+  const repositoryFilters = {
+    page,
+    limit,
+    search: filters.search,
+    categoryId: filters.categoryId,
+    difficulty: filters.difficulty,
+    status: filters.status,
+  } as QuestionListFilters;
+
+  const { data, total } = await listQuestionsRepository(repositoryFilters);
+  return { data, page, limit, total };
+}
+
+export type CreateQuestionInput = {
+  code: string;
+  text: string;
+  categoryId: number;
+  type: Question["type"];
+  difficulty: Question["difficulty"];
+  status?: Question["status"];
+  options: Question["options"];
+  answer: string;
+  explanation?: string | null;
+};
+
+export class QuestionValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "QuestionValidationError";
+  }
+}
+
+/** Ambil satu soal berdasarkan id. */
+export async function getQuestion(id: number): Promise<Question | null> {
+  const row = await findQuestionById(id);
+  return row ?? null;
+}
+
+/** Buat soal baru. */
+export async function createQuestion(input: CreateQuestionInput): Promise<Question> {
+  const category = await findCategoryById(input.categoryId);
+  if (!category) {
+    throw new QuestionValidationError("Kategori tidak ditemukan");
+  }
+
+  const row = await createQuestionRow({
+    code: input.code.trim(),
+    text: input.text.trim(),
+    categoryId: input.categoryId,
+    type: input.type,
+    difficulty: input.difficulty,
+    status: input.status ?? "Draf",
+    options: input.options,
+    answer: input.answer,
+    explanation: input.explanation ?? null,
+  });
+
+  return row;
+}
+
 /** Bentuk data insert dari satu soal hasil parsing. */
 function toInsertPayload(question: ParsedQuestion, categoryId: number): NewQuestion {
   return {
@@ -172,4 +260,63 @@ function toInsertPayload(question: ParsedQuestion, categoryId: number): NewQuest
     answer: question.answer,
     explanation: question.explanation,
   };
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+
+  const directCode = (error as { code?: unknown }).code;
+  if (directCode === "23505") {
+    return true;
+  }
+
+  const cause = (error as { cause?: unknown }).cause;
+  if (typeof cause === "object" && cause !== null) {
+    return (cause as { code?: unknown }).code === "23505";
+  }
+
+  return false;
+}
+
+/** Hapus soal berdasarkan id. Mengembalikan false jika tidak ditemukan. */
+export async function deleteQuestion(id: number): Promise<boolean> {
+  const row = await removeQuestionRow(id);
+  return row !== undefined;
+}
+
+/** Duplikat soal menjadi salinan baru berstatus Draf dengan kode baru. */
+export async function duplicateQuestion(id: number): Promise<Question | null> {
+  const original = await findQuestionById(id);
+  if (!original) {
+    return null;
+  }
+
+  let code = `${original.code}-COPY`;
+  let suffix = 2;
+
+  // Coba kode kandidat; jika bentrok, tambahkan sufiks angka.
+  while (true) {
+    try {
+      const row = await createQuestionRow({
+        code,
+        text: original.text,
+        categoryId: original.categoryId,
+        type: original.type,
+        difficulty: original.difficulty,
+        status: "Draf",
+        options: original.options,
+        answer: original.answer,
+        explanation: original.explanation,
+      });
+      return row;
+    } catch (error) {
+      if (!isUniqueViolation(error)) {
+        throw error;
+      }
+      code = `${original.code}-COPY-${suffix}`;
+      suffix += 1;
+    }
+  }
 }
