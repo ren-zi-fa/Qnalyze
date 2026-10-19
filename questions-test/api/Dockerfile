@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ================= Build stage =================
-FROM node:24.21.0-slim AS build
+FROM node:24.22.0-slim AS build
 
 # Build tools (python3/make/g++) dipakai bila bcrypt perlu kompilasi dari sumber
 RUN apt-get update \
@@ -30,7 +30,7 @@ RUN pnpm build
 RUN pnpm prune --prod
 
 # ================= Runtime stage =================
-FROM node:24.21.0-slim AS runtime
+FROM node:24.22.0-slim AS runtime
 
 ENV NODE_ENV=production
 WORKDIR /app
