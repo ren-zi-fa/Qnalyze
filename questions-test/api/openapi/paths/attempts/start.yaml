@@ -2,6 +2,7 @@ post:
   tags:
     - Attempts
   summary: Mulai pengerjaan soal
+  security: []
   operationId: startAttempt
   description: >-
     Membuat sesi pengerjaan dan mengembalikan paket soal TANPA
@@ -22,7 +23,5 @@ post:
             $ref: ../../components/schemas/attempt.yaml#/Attempt
     "400":
       $ref: ../../components/responses.yaml#/ValidationError
-    "401":
-      $ref: ../../components/responses.yaml#/Unauthorized
     "404":
       $ref: ../../components/responses.yaml#/NotFound

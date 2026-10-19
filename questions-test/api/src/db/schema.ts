@@ -1,5 +1,5 @@
 import { defineRelations } from "drizzle-orm";
-import { index, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { index, integer, jsonb, pgTable, real, serial, text, timestamp } from "drizzle-orm/pg-core";
 import type {
   ParsedOption,
   QuestionDifficulty,
@@ -74,23 +74,57 @@ export type Question = typeof questions.$inferSelect;
 /** Bentuk data untuk menyisipkan soal baru. */
 export type NewQuestion = typeof questions.$inferInsert;
 
-export const relations = defineRelations({ users, sessions, categories, questions }, (r) => ({
-  users: {
-    sessions: r.many.sessions(),
-  },
-  sessions: {
-    user: r.one.users({
-      from: r.sessions.userId,
-      to: r.users.id,
-    }),
-  },
-  categories: {
-    questions: r.many.questions(),
-  },
-  questions: {
-    category: r.one.categories({
-      from: r.questions.categoryId,
-      to: r.categories.id,
-    }),
-  },
-}));
+export const attempts = pgTable("attempts", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
+  categoryId: integer("category_id")
+    .notNull()
+    .references(() => categories.id, { onDelete: "restrict" }),
+  title: text("title").notNull(),
+  packageLabel: text("package_label"),
+  durationLimitMinutes: integer("duration_limit_minutes").notNull().default(20),
+  status: text("status").$type<"Berlangsung" | "Selesai">().notNull().default("Berlangsung"),
+  startedAt: timestamp("started_at").notNull().defaultNow(),
+  finishedAt: timestamp("finished_at"),
+  score: integer("score"),
+  correct: integer("correct"),
+  total: integer("total").notNull().default(0),
+  durationMinutes: real("duration_minutes"),
+  questionIds: jsonb("question_ids").$type<number[]>().notNull().default([]),
+  answers: jsonb("answers").$type<Record<string, string>>().notNull().default({}),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const relations = defineRelations(
+  { users, sessions, categories, questions, attempts },
+  (r) => ({
+    users: {
+      sessions: r.many.sessions(),
+    },
+    sessions: {
+      user: r.one.users({
+        from: r.sessions.userId,
+        to: r.users.id,
+      }),
+    },
+    categories: {
+      questions: r.many.questions(),
+    },
+    questions: {
+      category: r.one.categories({
+        from: r.questions.categoryId,
+        to: r.categories.id,
+      }),
+    },
+    attempts: {
+      user: r.one.users({
+        from: r.attempts.userId,
+        to: r.users.id,
+      }),
+      category: r.one.categories({
+        from: r.attempts.categoryId,
+        to: r.categories.id,
+      }),
+    },
+  }),
+);

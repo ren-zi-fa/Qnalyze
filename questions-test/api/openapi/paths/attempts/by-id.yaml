@@ -2,6 +2,7 @@ get:
   tags:
     - Attempts
   summary: Detail satu pengerjaan
+  security: []
   operationId: getAttempt
   description: >-
     Selama status Berlangsung, kunci jawaban dan pembahasan
@@ -16,7 +17,5 @@ get:
         application/json:
           schema:
             $ref: ../../components/schemas/attempt.yaml#/Attempt
-    "401":
-      $ref: ../../components/responses.yaml#/Unauthorized
     "404":
       $ref: ../../components/responses.yaml#/NotFound

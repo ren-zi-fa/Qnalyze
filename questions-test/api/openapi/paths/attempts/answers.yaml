@@ -2,6 +2,7 @@ post:
   tags:
     - Attempts
   summary: Kumpulkan jawaban dan akhiri pengerjaan
+  security: []
   operationId: submitAttemptAnswers
   description: >-
     Seluruh jawaban dikirim sekaligus. Server menghitung skor,
@@ -24,8 +25,6 @@ post:
             $ref: ../../components/schemas/attempt.yaml#/Attempt
     "400":
       $ref: ../../components/responses.yaml#/ValidationError
-    "401":
-      $ref: ../../components/responses.yaml#/Unauthorized
     "404":
       $ref: ../../components/responses.yaml#/NotFound
     "409":
