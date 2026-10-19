@@ -301,6 +301,14 @@ export default function ImportExcelPage() {
                     Unduh Laporan Error
                   </Button>
                 ) : null}
+                {result ? (
+                  <div className="flex justify-end">
+                    <Button onClick={resetImport}>
+                      <CheckCircle2 />
+                      Selesai
+                    </Button>
+                  </div>
+                ) : null}
               </CardContent>
             </Card>
           ) : null}
