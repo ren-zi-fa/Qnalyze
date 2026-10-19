@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { Router } from "express";
 import multer from "multer";
 import { importExcel, previewExcelImport } from "../controllers/question.controller.js";
-import { requireAuth } from "../middlewares/auth.js";
+import { requireAdmin, requireAuth } from "../middlewares/auth.js";
 import { HttpStatus } from "../utils/http-status.js";
 
 export const questionRouter: Router = Router();
@@ -32,5 +32,5 @@ function handleUpload(req: Request, res: Response, next: NextFunction): void {
   });
 }
 
-questionRouter.post("/import", requireAuth, handleUpload, importExcel);
-questionRouter.post("/import/preview", requireAuth, handleUpload, previewExcelImport);
+questionRouter.post("/import", requireAuth, requireAdmin, handleUpload, importExcel);
+questionRouter.post("/import/preview", requireAuth, requireAdmin, handleUpload, previewExcelImport);
