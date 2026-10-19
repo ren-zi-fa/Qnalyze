@@ -1,0 +1,17 @@
+# Code owners for Qnalyze
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repository
+*       @ren-zi-fa @fathur021
+
+# API
+/questions-test/api/    @ren-zi-fa @fathur021
+
+# UI
+/questions-test/ui/     @ren-zi-fa @fathur021
+
+# CI / GitHub configuration
+/.github/               @ren-zi-fa @fathur021
+
+# Docker
+/docker-compose*.yml    @ren-zi-fa @fathur021
