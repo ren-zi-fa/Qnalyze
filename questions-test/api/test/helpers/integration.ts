@@ -90,6 +90,8 @@ export async function ensureQuestion(code: string, categoryName: string): Promis
       code,
       text: "Soal acuan pengujian",
       categoryId: category.id,
+      // Harus "Terbit" agar ikut terpilih saat memulai pengerjaan (startAttempt).
+      status: "Terbit",
       type: "Pilihan Ganda",
       options: [
         { key: "A", text: "Opsi A" },

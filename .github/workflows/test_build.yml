@@ -17,8 +17,65 @@ on:
       - ".github/workflows/test_build.yml"
 
 jobs:
+  test:
+    name: Vitest (API)
+    runs-on: ubuntu-latest
+
+    # Test integrasi membutuhkan Postgres asli (migrasi + seed dijalankan dulu).
+    services:
+      database:
+        image: postgres:16
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: qnalyz_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U root -d qnalyz_db"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://root:root@localhost:5432/qnalyz_db
+
+    defaults:
+      run:
+        working-directory: questions-test/api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.21.0"
+          cache: pnpm
+          cache-dependency-path: questions-test/api/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Migrate database
+        run: pnpm db:migrate
+
+      - name: Seed database
+        run: pnpm db:seed
+
+      - name: Run Vitest
+        run: pnpm test
+
   docker:
     name: Build & smoke test (API + UI)
+    needs: test
     runs-on: ubuntu-latest
 
     env:

@@ -107,7 +107,7 @@ describe("GET /api/questions", () => {
     );
 
     const response = await fetch(`${server.baseUrl}${BASE_PATH}?page=1&limit=2`, {
-      headers: { cookie: userCookie },
+      headers: { cookie: adminCookie },
     });
     const body = (await response.json()) as PaginatedQuestions;
 
@@ -158,7 +158,7 @@ describe("GET /api/questions/:id", () => {
     );
 
     const response = await fetch(`${server.baseUrl}${BASE_PATH}/${(created as Question).id}`, {
-      headers: { cookie: userCookie },
+      headers: { cookie: adminCookie },
     });
     const body = (await response.json()) as Question;
 
