@@ -1,10 +1,12 @@
 import "../config/env.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { hash } from "bcrypt";
 import { logger } from "../utils/logger.js";
 import { db } from "./index.js";
 import { categories, questions, users } from "./schema.js";
 
-async function seed() {
+export async function seed() {
   const passwordHash = await hash("secret123", 10);
 
   const seededUsers = await db
@@ -134,7 +136,13 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  logger.error({ err: error }, "Seeding gagal");
-  process.exitCode = 1;
-});
+// Jalankan hanya saat file ini dieksekusi langsung (`pnpm db:seed`), bukan saat diimpor.
+const isDirectRun =
+  process.argv[1] !== undefined && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isDirectRun) {
+  main().catch((error) => {
+    logger.error({ err: error }, "Seeding gagal");
+    process.exitCode = 1;
+  });
+}
