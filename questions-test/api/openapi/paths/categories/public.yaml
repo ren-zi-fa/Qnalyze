@@ -1,0 +1,21 @@
+get:
+  tags:
+    - Categories
+  summary: Daftar kategori untuk katalog publik
+  operationId: listPublicCategories
+  description: >-
+    Mengembalikan kategori yang memiliki minimal satu soal berstatus
+    "Terbit". `questionCount` hanya menghitung soal berstatus "Terbit",
+    sehingga kategori yang seluruh soalnya masih "Draf" (atau belum punya
+    soal) tidak ikut dikembalikan. Hal ini menjaga agar katalog publik tidak
+    menampilkan kategori yang tidak bisa dimulai latihannya.
+
+    Endpoint ini tidak memerlukan autentikasi.
+  security: []
+  responses:
+    "200":
+      description: Daftar kategori yang memiliki soal terbit
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/category.yaml#/CategoriesResponse

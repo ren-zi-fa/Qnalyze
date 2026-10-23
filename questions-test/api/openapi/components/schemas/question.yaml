@@ -301,6 +301,81 @@ ImportQuestionsResponse:
       items:
         $ref: "#/Question"
 
+PublicQuestion:
+  type: object
+  description: >-
+    Soal untuk katalog/latihan publik. Sama seperti Question, tetapi
+    `answer` dan `explanation` tidak pernah disertakan. Hanya soal berstatus
+    "Terbit" yang dikembalikan oleh endpoint publik.
+  required:
+    - id
+    - code
+    - text
+    - categoryId
+    - type
+    - difficulty
+    - status
+    - options
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      type: integer
+      example: 1
+    code:
+      type: string
+      description: Kode unik soal
+      example: Q-LG-001
+    text:
+      type: string
+      description: Pertanyaan
+      example: Apa ibu kota Indonesia?
+    categoryId:
+      type: integer
+      description: Kategori tempat soal berada
+      example: 1
+    type:
+      type: string
+      enum:
+        - Pilihan Ganda
+        - Benar/Salah
+        - Isian Singkat
+      example: Pilihan Ganda
+    difficulty:
+      type: string
+      enum:
+        - Mudah
+        - Sedang
+        - Sulit
+      example: Mudah
+    status:
+      type: string
+      description: Selalu "Terbit" pada endpoint publik
+      enum:
+        - Terbit
+      example: Terbit
+    options:
+      type: array
+      description: Daftar opsi jawaban
+      items:
+        type: object
+        required:
+          - key
+          - text
+        properties:
+          key:
+            type: string
+            example: A
+          text:
+            type: string
+            example: Jakarta
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
 PaginatedQuestions:
   type: object
   required:
@@ -322,3 +397,26 @@ PaginatedQuestions:
     total:
       type: integer
       example: 42
+
+PaginatedPublicQuestions:
+  type: object
+  required:
+    - data
+    - page
+    - limit
+    - total
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "#/PublicQuestion"
+    page:
+      type: integer
+      example: 1
+    limit:
+      type: integer
+      example: 100
+    total:
+      type: integer
+      description: Total soal terbit yang cocok dengan filter
+      example: 1

@@ -1,0 +1,42 @@
+get:
+  tags:
+    - Questions
+  summary: Daftar soal terbit untuk latihan publik
+  operationId: listPublicQuestions
+  description: >-
+    Mengembalikan soal yang berstatus "Terbit" saja, dengan paginasi.
+    Field `answer` dan `explanation` selalu dihilangkan dari respons agar
+    kunci jawaban tidak bocor ke browser. Soal berstatus "Draf" tidak pernah
+    dikembalikan oleh endpoint ini.
+
+    Endpoint ini tidak memerlukan autentikasi.
+  security: []
+  parameters:
+    - $ref: ../../components/parameters.yaml#/PageParam
+    - name: limit
+      in: query
+      required: false
+      description: Jumlah soal per halaman (default 100, maksimum 100)
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+        example: 100
+    - name: categoryId
+      in: query
+      required: false
+      description: Saring soal berdasarkan kategori
+      schema:
+        type: integer
+        minimum: 1
+        example: 1
+  responses:
+    "200":
+      description: Daftar soal terbit tanpa kunci jawaban dan pembahasan
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/question.yaml#/PaginatedPublicQuestions
+    "400":
+      $ref: ../../components/responses.yaml#/ValidationError

@@ -1,3 +1,13 @@
+CategoriesResponse:
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "#/Category"
+
 Category:
   type: object
   required:
@@ -17,8 +27,10 @@ Category:
       example: Sinonim, antonim, analogi, dan pemahaman bacaan.
     questionCount:
       type: integer
-      description: Jumlah soal di kategori ini (dihitung otomatis)
-      example: 214
+      description: >-
+        Jumlah soal di kategori ini (dihitung otomatis). Pada endpoint publik
+        (`/api/categories/public`) hanya soal berstatus "Terbit" yang dihitung.
+      example: 1
     tone:
       type: string
       description: Warna aksen untuk kartu kategori di UI

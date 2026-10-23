@@ -36,6 +36,8 @@ paths:
     $ref: ./paths/users/me.yaml
   /api/questions:
     $ref: ./paths/questions/collection.yaml
+  /api/questions/public:
+    $ref: ./paths/questions/public.yaml
   /api/questions/{id}:
     $ref: ./paths/questions/by-id.yaml
   /api/questions/import:
@@ -46,6 +48,8 @@ paths:
     $ref: ./paths/questions/duplicate.yaml
   /api/categories:
     $ref: ./paths/categories/collection.yaml
+  /api/categories/public:
+    $ref: ./paths/categories/public.yaml
   /api/categories/{id}:
     $ref: ./paths/categories/by-id.yaml
   /api/attempts:
@@ -110,8 +114,14 @@ components:
       $ref: ./components/schemas/question.yaml#/ImportQuestionsResponse
     PaginatedQuestions:
       $ref: ./components/schemas/question.yaml#/PaginatedQuestions
+    PublicQuestion:
+      $ref: ./components/schemas/question.yaml#/PublicQuestion
+    PaginatedPublicQuestions:
+      $ref: ./components/schemas/question.yaml#/PaginatedPublicQuestions
     Category:
       $ref: ./components/schemas/category.yaml#/Category
+    CategoriesResponse:
+      $ref: ./components/schemas/category.yaml#/CategoriesResponse
     CreateCategoryRequest:
       $ref: ./components/schemas/category.yaml#/CreateCategoryRequest
     UpdateCategoryRequest:
