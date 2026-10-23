@@ -4,7 +4,7 @@ import { CheckCircle2, Lightbulb, XCircle } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import type { QuizQuestion } from "@/lib/portal-data"
+import type { QuizQuestion } from "@/lib/types/portal"
 import { cn } from "cn"
 
 function OptionRow({

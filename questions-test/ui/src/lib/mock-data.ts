@@ -1,62 +1,15 @@
-export type Category = {
-  id: string
-  name: string
-  description: string
-  questionCount: number
-  tone: "indigo" | "emerald" | "amber" | "rose" | "sky" | "violet"
-  createdAt: string
-}
-
-export type QuestionType = "Pilihan Ganda" | "Benar/Salah" | "Isian Singkat"
-export type Difficulty = "Mudah" | "Sedang" | "Sulit"
-export type QuestionStatus = "Terbit" | "Draf"
-
-export type QuestionOption = {
-  key: string
-  text: string
-}
-
-export type Question = {
-  id: string
-  code: string
-  text: string
-  categoryId: string
-  type: QuestionType
-  difficulty: Difficulty
-  status: QuestionStatus
-  options: QuestionOption[]
-  answer: string
-  explanation: string
-  updatedAt: string
-}
-
-export type UserRole = "Admin" | "Guru" | "Siswa"
-export type UserStatus = "Aktif" | "Nonaktif"
-
-export type User = {
-  id: string
-  name: string
-  email: string
-  role: UserRole
-  status: UserStatus
-  joinedAt: string
-  lastActive: string
-}
-
-export type SubmissionStatus = "Selesai" | "Berlangsung" | "Belum Mulai"
-
-export type Submission = {
-  id: string
-  studentName: string
-  exam: string
-  categoryId: string
-  score: number
-  correct: number
-  total: number
-  durationMinutes: number
-  submittedAt: string
-  status: SubmissionStatus
-}
+import type {
+  Category,
+  DashboardStat,
+  Question,
+  RecentActivityItem,
+  ScoreBucket,
+  Submission,
+  ToneClass,
+  TopCategory,
+  User,
+  WeeklyActivityPoint,
+} from "./types/models"
 
 export const categories: Category[] = [
   {
@@ -669,7 +622,7 @@ export const submissions: Submission[] = [
   },
 ]
 
-export const dashboardStats = [
+export const dashboardStats: DashboardStat[] = [
   {
     key: "questions",
     label: "Total Soal",
@@ -700,7 +653,7 @@ export const dashboardStats = [
   },
 ]
 
-export const scoreDistribution = [
+export const scoreDistribution: ScoreBucket[] = [
   { label: "0–49", value: 42 },
   { label: "50–59", value: 88 },
   { label: "60–69", value: 176 },
@@ -709,7 +662,7 @@ export const scoreDistribution = [
   { label: "90–100", value: 205 },
 ]
 
-export const weeklyActivity = [
+export const weeklyActivity: WeeklyActivityPoint[] = [
   { day: "Sen", value: 320 },
   { day: "Sel", value: 410 },
   { day: "Rab", value: 285 },
@@ -719,7 +672,7 @@ export const weeklyActivity = [
   { day: "Min", value: 96 },
 ]
 
-export const recentActivity = [
+export const recentActivity: RecentActivityItem[] = [
   {
     id: "a-1",
     actor: "Siti Nurhaliza",
@@ -762,7 +715,7 @@ export const recentActivity = [
   },
 ]
 
-export const topCategories = [
+export const topCategories: TopCategory[] = [
   { categoryId: "cat-verbal", attempts: 684, average: 78 },
   { categoryId: "cat-logika", attempts: 542, average: 82 },
   { categoryId: "cat-numerik", attempts: 431, average: 71 },
@@ -774,10 +727,7 @@ export const topCategories = [
 /* Portal siswa (sisi user)                                            */
 /* ------------------------------------------------------------------ */
 
-export const toneClasses: Record<
-  Category["tone"],
-  { bg: string; text: string; ring: string }
-> = {
+export const toneClasses: Record<Category["tone"], ToneClass> = {
   indigo: {
     bg: "bg-indigo-500/10",
     text: "text-indigo-600 dark:text-indigo-400",

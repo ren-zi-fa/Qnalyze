@@ -6,7 +6,11 @@ patch:
   description: >-
     Menyimpan satu atau beberapa jawaban pada sesi yang masih berlangsung
     tanpa mengakhiri pengerjaan. Jawaban dengan questionId yang sama
-    akan diperbarui.
+    akan diperbarui, sedangkan jawaban lain tetap dipertahankan.
+
+    Tidak memerlukan autentikasi (attempt boleh dimulai sebagai anonim).
+    Bila cookie sesi dikirim, kepemilikan attempt ikut diverifikasi.
+  security: []
   parameters:
     - $ref: ../../components/parameters.yaml#/IdParam
   requestBody:

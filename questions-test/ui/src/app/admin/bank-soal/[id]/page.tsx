@@ -6,8 +6,9 @@ import { toast } from "sonner"
 
 import { PageHeader } from "@/components/admin/page-header"
 import { QuestionForm } from "@/components/admin/question-form"
-import { ApiError, getQuestion, type ApiQuestion } from "@/lib/api"
-import type { Question } from "@/lib/mock-data"
+import { ApiError, getQuestion } from "@/lib/api"
+import type { ApiQuestion } from "@/lib/types/api"
+import type { Question } from "@/lib/types/models"
 
 function toQuestion(question: ApiQuestion): Question {
   return {

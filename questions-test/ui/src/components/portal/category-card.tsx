@@ -3,7 +3,7 @@ import { BookOpenText, PlayCircle } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import type { ApiCategory } from "@/lib/api"
+import type { ApiCategory } from "@/lib/types/api"
 
 export function CategoryCard({
   category,

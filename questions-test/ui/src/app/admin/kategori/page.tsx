@@ -43,8 +43,8 @@ import {
   deleteCategory,
   getCategories,
   updateCategory,
-  type ApiCategory,
 } from "@/lib/api";
+import type { ApiCategory } from "@/lib/types/api";
 import { toneClasses } from "@/lib/mock-data";
 import { cn } from "cn";
 

@@ -42,12 +42,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  type Question,
-  type Difficulty,
-  type QuestionStatus,
-} from "@/lib/mock-data"
-import { ApiError, deleteQuestion, duplicateQuestion, getCategories, getQuestion, getQuestions, updateQuestion, type ApiCategory, type ApiQuestion } from "@/lib/api"
+import type {
+  Difficulty,
+  Question,
+  QuestionStatus,
+} from "@/lib/types/models"
+import { ApiError, deleteQuestion, duplicateQuestion, getCategories, getQuestion, getQuestions, updateQuestion } from "@/lib/api"
+import type { ApiCategory, ApiQuestion } from "@/lib/types/api"
 import { toast } from "sonner"
 import { cn } from "cn"
 

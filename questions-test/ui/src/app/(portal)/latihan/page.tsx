@@ -8,7 +8,8 @@ import { toast } from "sonner"
 import { PortalBreadcrumbs } from "@/components/portal/breadcrumbs"
 import { CategoryCard } from "@/components/portal/category-card"
 import { Input } from "@/components/ui/input"
-import { ApiError, getCategories, startAttempt, type ApiCategory } from "@/lib/api"
+import { ApiError, getCategories, startAttempt } from "@/lib/api"
+import type { ApiCategory } from "@/lib/types/api"
 
 export default function KatalogPage() {
   const router = useRouter()

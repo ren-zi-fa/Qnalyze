@@ -2,6 +2,7 @@ import type { Question } from "../db/schema.js";
 import {
   create as createAttemptRow,
   findById as findAttemptById,
+  mergeAnswers as mergeAttemptAnswers,
   type NewAttempt,
   update as updateAttemptRow,
 } from "../repositories/attempt.repository.js";
@@ -36,6 +37,8 @@ export type Attempt = {
   correct: number | null;
   total: number;
   durationMinutes: number | null;
+  /** Jawaban tersimpan sementara: questionId (string) → jawaban. */
+  answers: Record<string, string>;
   questions: AttemptQuestion[];
 };
 
@@ -87,6 +90,7 @@ function toAttempt(
     correct: number | null;
     total: number;
     durationMinutes: number | null;
+    answers: Record<string, string>;
   },
   questions: AttemptQuestion[],
 ): Attempt {
@@ -103,6 +107,7 @@ function toAttempt(
     correct: row.correct,
     total: row.total,
     durationMinutes: row.durationMinutes,
+    answers: row.answers,
     questions,
   };
 }
@@ -151,6 +156,48 @@ export async function startAttempt(
   );
 
   return toAttempt(attemptRow, questions);
+}
+
+/**
+ * Simpan jawaban sementara pada sesi yang masih berlangsung.
+ *
+ * Jawaban digabungkan dengan jawaban yang sudah tersimpan dan tidak mengubah
+ * status sesi maupun skor. Mengembalikan "invalid" bila ada `questionId`
+ * yang bukan bagian dari paket soal sesi tersebut.
+ */
+export async function saveAttemptAnswers(
+  id: number,
+  userId: number | undefined,
+  isAdmin: boolean,
+  answers: SubmitAnswer[],
+): Promise<Attempt | null | "conflict" | "invalid"> {
+  const row = await findAttemptById(id);
+  if (!row) {
+    return null;
+  }
+  if (userId !== undefined && row.userId !== userId && !isAdmin) {
+    return null;
+  }
+  if (row.status === "Selesai") {
+    return "conflict";
+  }
+
+  const questionIds = new Set(row.questionIds);
+  if (answers.some(({ questionId }) => !questionIds.has(questionId))) {
+    return "invalid";
+  }
+
+  const answerRecord: Record<string, string> = {};
+  for (const { questionId, answer } of answers) {
+    answerRecord[String(questionId)] = answer;
+  }
+
+  const updated = await mergeAttemptAnswers(id, answerRecord);
+  if (!updated) {
+    return "conflict";
+  }
+
+  return getAttempt(id, userId, isAdmin);
 }
 
 export async function getAttempt(
@@ -205,7 +252,15 @@ export async function submitAttempt(
     return "conflict";
   }
 
-  const answerMap = new Map(answers.map((item) => [item.questionId, item.answer]));
+  // Jawaban sementara (autosave) tetap dihitung saat pengerjaan dikumpulkan.
+  const answerRecord: Record<string, string> = { ...row.answers };
+  for (const item of answers) {
+    answerRecord[String(item.questionId)] = item.answer;
+  }
+
+  const answerMap = new Map<number, string>(
+    Object.entries(answerRecord).map(([questionId, answer]) => [Number(questionId), answer]),
+  );
   const questions = await Promise.all(
     row.questionIds.map((questionId) => findQuestionById(questionId)),
   );
@@ -228,11 +283,6 @@ export async function submitAttempt(
   const score = total > 0 ? Math.round((correct / total) * 100) : 0;
   const finishedAt = new Date();
   const durationMinutes = (finishedAt.getTime() - row.startedAt.getTime()) / 60000;
-
-  const answerRecord: Record<string, string> = {};
-  for (const item of answers) {
-    answerRecord[String(item.questionId)] = item.answer;
-  }
 
   const updated = await updateAttemptRow(id, {
     status: "Selesai",

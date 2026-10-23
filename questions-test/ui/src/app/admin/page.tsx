@@ -23,7 +23,8 @@ import {
   weeklyActivity,
   toneClasses,
 } from "@/lib/mock-data";
-import { ApiError, getCategories, type ApiCategory } from "@/lib/api";
+import { ApiError, getCategories } from "@/lib/api";
+import type { ApiCategory } from "@/lib/types/api";
 
 const statIcons = [BookOpen, Tags, Users, ClipboardCheck] as const;
 const statTints = [

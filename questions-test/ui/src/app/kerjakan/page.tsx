@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
@@ -21,8 +21,31 @@ import { SubmitDialog } from "@/components/portal/quiz/submit-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ApiError, getAttempt, submitAttempt, type Attempt } from "@/lib/api"
-import type { QuizQuestion } from "@/lib/portal-data"
+import { ApiError, getAttempt, saveAttemptAnswers, submitAttempt } from "@/lib/api"
+import type { Attempt } from "@/lib/types/api"
+import type { QuizQuestion } from "@/lib/types/portal"
+
+type SaveState = "idle" | "saving" | "saved" | "error"
+
+/** Ubah state jawaban (nomor soal → jawaban) menjadi payload API. */
+function toAnswerPayload(attempt: Attempt, answers: Record<number, string>) {
+  return Object.entries(answers)
+    .map(([number, answer]) => ({
+      questionId: attempt.questions[Number(number) - 1]?.id ?? 0,
+      answer,
+    }))
+    .filter(({ questionId }) => questionId > 0)
+}
+
+/** Pulihkan jawaban tersimpan dari API ke state berdasarkan nomor soal. */
+function toSavedAnswers(attempt: Attempt): Record<number, string> {
+  const restored: Record<number, string> = {}
+  for (const question of attempt.questions) {
+    const saved = attempt.answers?.[String(question.id)]
+    if (saved !== undefined) restored[question.number] = saved
+  }
+  return restored
+}
 
 function formatTime(totalSeconds: number) {
   return `${String(Math.floor(totalSeconds / 60)).padStart(2, "0")}:${String(totalSeconds % 60).padStart(2, "0")}`
@@ -50,6 +73,9 @@ export default function KerjakanPage() {
   const [secondsLeft, setSecondsLeft] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [saveState, setSaveState] = useState<SaveState>("idle")
+  const lastSavedSignature = useRef<string | null>(null)
+  const saveQueue = useRef<Promise<void>>(Promise.resolve())
 
   const finishAttempt = useCallback(async () => {
     if (!attempt || attempt.status === "Selesai" || submitting) return
@@ -80,7 +106,10 @@ export default function KerjakanPage() {
     }
     getAttempt(Number(attemptId))
       .then((value) => {
+        const restored = toSavedAnswers(value)
         setAttempt(value)
+        setAnswers(restored)
+        lastSavedSignature.current = JSON.stringify(toAnswerPayload(value, restored))
         setSecondsLeft(value.durationLimitMinutes * 60)
       })
       .catch((error: unknown) => {
@@ -101,6 +130,37 @@ export default function KerjakanPage() {
   useEffect(() => {
     if (secondsLeft === 0 && attempt?.status === "Berlangsung") void finishAttempt()
   }, [secondsLeft, attempt?.status, finishAttempt])
+
+  // Autosave: kirim jawaban setelah pengguna berhenti menjawab sebentar.
+  useEffect(() => {
+    if (!attempt || attempt.status === "Selesai" || submitting) return
+
+    const payload = toAnswerPayload(attempt, answers)
+    const signature = JSON.stringify(payload)
+    if (signature === lastSavedSignature.current) return
+
+    const timer = window.setTimeout(() => {
+      setSaveState("saving")
+
+      // Antrian membuat request autosave berurutan agar jawaban lama tidak
+      // menimpa jawaban yang lebih baru.
+      saveQueue.current = saveQueue.current
+        .catch(() => undefined)
+        .then(() => saveAttemptAnswers(attempt.id, payload))
+        .then(() => {
+          lastSavedSignature.current = signature
+          setSaveState("saved")
+        })
+        .catch((error: unknown) => {
+          setSaveState("error")
+          toast.error(
+            error instanceof ApiError ? error.message : "Gagal menyimpan jawaban sementara.",
+          )
+        })
+    }, 700)
+
+    return () => window.clearTimeout(timer)
+  }, [answers, attempt, submitting])
 
   const questions = useMemo(() => attempt?.questions.map(toQuizQuestion) ?? [], [attempt])
   if (loading || !attempt || questions.length === 0) {
@@ -159,6 +219,26 @@ export default function KerjakanPage() {
           <Card><CardContent className="space-y-4"><p className="text-sm font-semibold text-foreground">Navigasi Nomor Soal</p><QuestionNavigator total={total} current={current} answered={answered} flagged={flagged} onSelect={setCurrent} /></CardContent></Card>
           {!isReview ? <SubmitDialog total={total} answered={answered.size} flagged={flagged.size} onConfirm={() => void finishAttempt()} /> : null}
           {submitting ? <p className="text-center text-sm text-muted-foreground">Mengumpulkan jawaban...</p> : null}
+          {!isReview && !submitting ? (
+            <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+              <span
+                className={
+                  saveState === "error"
+                    ? "size-1.5 rounded-full bg-rose-500"
+                    : saveState === "saving"
+                      ? "size-1.5 animate-pulse rounded-full bg-amber-500"
+                      : "size-1.5 rounded-full bg-emerald-500"
+                }
+              />
+              {saveState === "saving"
+                ? "Menyimpan jawaban..."
+                : saveState === "error"
+                  ? "Gagal menyimpan jawaban sementara"
+                  : saveState === "saved"
+                    ? "Jawaban tersimpan otomatis"
+                    : "Jawaban disimpan otomatis"}
+            </p>
+          ) : null}
         </aside>
       </div>
     </div>

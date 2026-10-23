@@ -1,18 +1,4 @@
-export type PortalUser = {
-  id: string
-  name: string
-  email: string
-  role: string
-  school: string
-  grade: string
-  nisn: string
-  joinedAt: string
-  target: string
-  streakDays: number
-  totalPracticeHours: number
-  modulesDone: number
-  initials: string
-}
+import type { PortalUser } from "./types/portal"
 
 export const portalUser: PortalUser = {
   id: "USR-88421",

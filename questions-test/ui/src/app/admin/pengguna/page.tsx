@@ -65,12 +65,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  users as initialUsers,
-  type User,
-  type UserRole,
-  type UserStatus,
-} from "@/lib/mock-data"
+import { users as initialUsers } from "@/lib/mock-data"
+import type { User, UserRole, UserStatus } from "@/lib/types/models"
 import { cn } from "cn"
 
 const roleStyles: Record<UserRole, string> = {

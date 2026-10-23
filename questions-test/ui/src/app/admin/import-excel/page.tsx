@@ -30,12 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  importQuestions,
-  previewQuestionsImport,
-  type ExcelImportPreview,
-  type ExcelImportResult,
-} from "@/lib/api"
+import { importQuestions, previewQuestionsImport } from "@/lib/api"
+import type { ExcelImportPreview, ExcelImportResult } from "@/lib/types/api"
 import { cn } from "cn"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024

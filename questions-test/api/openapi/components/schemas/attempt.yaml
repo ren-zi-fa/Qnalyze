@@ -81,6 +81,7 @@ Attempt:
     - durationLimitMinutes
     - status
     - startedAt
+    - answers
     - questions
   properties:
     id:
@@ -127,6 +128,16 @@ Attempt:
       type: [number, "null"]
       description: Durasi pengerjaan dalam menit, terisi setelah selesai
       example: 17.5
+    answers:
+      type: object
+      description: >-
+        Jawaban yang sudah tersimpan (termasuk autosave), dipetakan dari
+        `questionId` (string) ke jawaban. Tidak berisi kunci jawaban soal.
+      additionalProperties:
+        type: string
+      example:
+        "101": C
+        "102": A
     questions:
       type: array
       items:

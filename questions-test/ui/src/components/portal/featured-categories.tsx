@@ -6,7 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
 import { CategoryCard } from "@/components/portal/category-card";
-import { ApiError, getCategories, type ApiCategory } from "@/lib/api";
+import { ApiError, getCategories } from "@/lib/api";
+import type { ApiCategory } from "@/lib/types/api";
 
 export function FeaturedCategories() {
   const [categories, setCategories] = useState<ApiCategory[]>([]);

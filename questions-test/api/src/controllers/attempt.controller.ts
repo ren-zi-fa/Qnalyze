@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
-import { getAttempt, startAttempt, submitAttempt } from "../services/attempt.service.js";
+import {
+  getAttempt,
+  saveAttemptAnswers,
+  startAttempt,
+  submitAttempt,
+} from "../services/attempt.service.js";
 import { HttpStatus } from "../utils/http-status.js";
 
 function isAdmin(req: Request): boolean {
@@ -43,6 +48,28 @@ export async function getById(req: Request, res: Response): Promise<void> {
   }
 
   res.status(HttpStatus.OK).json(attempt);
+}
+
+export async function save(req: Request, res: Response): Promise<void> {
+  const id = Number(req.params.id);
+  const { answers } = req.body as { answers: { questionId: number; answer: string }[] };
+
+  const result = await saveAttemptAnswers(id, getUserId(req), isAdmin(req), answers);
+
+  if (result === null) {
+    res.status(HttpStatus.NOT_FOUND).json({ message: "Resource tidak ditemukan" });
+    return;
+  }
+  if (result === "conflict") {
+    res.status(HttpStatus.CONFLICT).json({ message: "Pengerjaan sudah diselesaikan sebelumnya" });
+    return;
+  }
+  if (result === "invalid") {
+    res.status(HttpStatus.BAD_REQUEST).json({ message: "Soal tidak termasuk dalam pengerjaan" });
+    return;
+  }
+
+  res.status(HttpStatus.OK).json(result);
 }
 
 export async function submit(req: Request, res: Response): Promise<void> {

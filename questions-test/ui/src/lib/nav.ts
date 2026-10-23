@@ -7,16 +7,9 @@ import {
   LayoutDashboard,
   Tags,
   Users,
-  type LucideIcon,
 } from "lucide-react"
 
-export type NavItem = {
-  label: string
-  href: string
-  icon: LucideIcon
-  /** Cocokkan juga untuk sub-route (mis. /admin/bank-soal/baru) */
-  match?: string
-}
+import type { NavItem } from "./types/nav"
 
 export const mainNav: NavItem[] = [
   {

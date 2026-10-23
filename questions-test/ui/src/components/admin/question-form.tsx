@@ -32,8 +32,9 @@ import {
   type QuestionOption,
   type QuestionStatus,
   type QuestionType,
-} from "@/lib/mock-data"
-import { ApiError, createQuestion, getCategories, updateQuestion, type ApiCategory } from "@/lib/api"
+} from "@/lib/types/models"
+import { ApiError, createQuestion, getCategories, updateQuestion } from "@/lib/api"
+import type { ApiCategory } from "@/lib/types/api"
 
 const questionTypes: QuestionType[] = [
   "Pilihan Ganda",

@@ -10,7 +10,8 @@ import {
 } from "react"
 import { useRouter } from "next/navigation"
 
-import { getCurrentUser, logout as logoutRequest, type User } from "@/lib/api"
+import { getCurrentUser, logout as logoutRequest } from "@/lib/api"
+import type { User } from "@/lib/types/api"
 
 type SessionStatus = "loading" | "authenticated" | "unauthenticated"
 

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db, type Executor } from "../db/index.js";
 import { attempts } from "../db/schema.js";
 
@@ -31,5 +31,28 @@ export async function update(
   executor: Executor = db,
 ): Promise<AttemptRow | undefined> {
   const [row] = await executor.update(attempts).set(values).where(eq(attempts.id, id)).returning();
+  return row;
+}
+
+/**
+ * Gabungkan jawaban ke sesi yang masih berlangsung tanpa mengakhiri sesi.
+ *
+ * Penggabungan dilakukan di database (`answers || patch`) supaya autosave
+ * yang datang berdekatan tidak saling menimpa. Nilai untuk `questionId` yang
+ * sama akan diperbarui.
+ */
+export async function mergeAnswers(
+  id: number,
+  answers: Record<string, string>,
+  executor: Executor = db,
+): Promise<AttemptRow | undefined> {
+  const patch = JSON.stringify(answers);
+
+  const [row] = await executor
+    .update(attempts)
+    .set({ answers: sql`${attempts.answers} || ${patch}::jsonb` })
+    .where(and(eq(attempts.id, id), eq(attempts.status, "Berlangsung")))
+    .returning();
+
   return row;
 }

@@ -45,9 +45,8 @@ import {
   categories,
   categoryName,
   submissions,
-  type Submission,
-  type SubmissionStatus,
 } from "@/lib/mock-data"
+import type { Submission, SubmissionStatus } from "@/lib/types/models"
 import { cn } from "cn"
 
 const statusStyles: Record<SubmissionStatus, string> = {

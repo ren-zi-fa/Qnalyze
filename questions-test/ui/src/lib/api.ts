@@ -1,93 +1,24 @@
-export type User = {
-  id: number;
-  name: string | null;
-  email: string;
-  createdAt: string;
-};
+import type {
+  ApiCategory,
+  ApiQuestion,
+  Attempt,
+  AuthResponse,
+  CategoriesResponse,
+  CategoryInput,
+  ExcelImportPreview,
+  ExcelImportResult,
+  LoginInput,
+  PublicQuestionsResponse,
+  QuestionInput,
+  QuestionsQuery,
+  QuestionsResponse,
+  RegisterInput,
+  SubmitAttemptInput,
+  User,
+} from "./types/api";
 
-export type ApiCategory = {
-  id: number;
-  name: string;
-  description: string | null;
-  tone: "indigo" | "emerald" | "amber" | "rose" | "sky" | "violet";
-  questionCount: number;
-  createdAt: string;
-};
-
-export type CategoryInput = {
-  name: string;
-  description?: string | null;
-  tone?: ApiCategory["tone"];
-};
-
-export type ApiQuestion = {
-  id: number;
-  code: string;
-  categoryId: number;
-  text: string;
-  type: "Pilihan Ganda" | "Benar/Salah" | "Isian Singkat";
-  difficulty: "Mudah" | "Sedang" | "Sulit";
-  status: "Terbit" | "Draf";
-  options: { key: string; text: string }[];
-  answer?: string;
-  explanation?: string | null;
-  updatedAt?: string;
-};
-
-export type QuestionInput = Omit<ApiQuestion, "id" | "updatedAt">;
-
-export type AttemptQuestion = {
-  id: number;
-  number: number;
-  topic: string;
-  difficulty: "Mudah" | "Sedang" | "Sulit";
-  prompt: string;
-  options: { key: string; text: string }[];
-  answer?: string;
-  explanation?: string | null;
-};
-
-export type Attempt = {
-  id: number;
-  categoryId: number;
-  title: string;
-  packageLabel: string | null;
-  durationLimitMinutes: number;
-  status: "Berlangsung" | "Selesai";
-  score: number | null;
-  correct: number | null;
-  total: number;
-  questions: AttemptQuestion[];
-};
-export type AuthResponse = {
-  user: User;
-};
-
-export type ExcelImportError = {
-  row: number;
-  message: string;
-};
-
-export type ExcelImportResult = {
-  imported: number;
-  failed: number;
-  errors: ExcelImportError[];
-};
-
-export type ExcelImportPreview = {
-  valid: number;
-  failed: number;
-  rows: {
-    row: number;
-    question: {
-      code: string;
-      text: string;
-      category: string;
-      type: string;
-    } | null;
-    errors: string[];
-  }[];
-};
+// Tetap re-export agar `import type { ... } from "@/lib/api"` lama tidak rusak.
+export type * from "./types/api";
 
 export class ApiError extends Error {
   status: number;
@@ -137,18 +68,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function login(input: { email: string; password: string }) {
+export function login(input: LoginInput) {
   return request<AuthResponse>("/auth/login", {
     method: "POST",
     body: JSON.stringify(input),
   });
 }
 
-export function register(input: {
-  name?: string;
-  email: string;
-  password: string;
-}) {
+export function register(input: RegisterInput) {
   return request<AuthResponse>("/auth/register", {
     method: "POST",
     body: JSON.stringify(input),
@@ -184,7 +111,7 @@ export function previewQuestionsImport(file: File) {
 }
 
 export async function getCategories(publicOnly = false) {
-  const result = await request<{ data: ApiCategory[] }>(
+  const result = await request<CategoriesResponse>(
     publicOnly ? "/categories/public" : "/categories",
   );
   return result.data;
@@ -208,20 +135,12 @@ export function deleteCategory(id: number) {
   return request<void>(`/categories/${id}`, { method: "DELETE" });
 }
 
-export async function getQuestions(
-  params: {
-    page?: number;
-    limit?: number;
-    status?: string;
-  } = {},
-) {
+export async function getQuestions(params: QuestionsQuery = {}) {
   const search = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) search.set(key, String(value));
   }
-  return request<{ data: ApiQuestion[]; total: number }>(
-    `/questions?${search}`,
-  );
+  return request<QuestionsResponse>(`/questions?${search}`);
 }
 
 export function getQuestion(id: string | number) {
@@ -251,7 +170,7 @@ export function duplicateQuestion(id: string | number) {
 }
 
 export function getPublicQuestions(categoryId: number) {
-  return request<{ data: Omit<ApiQuestion, "answer" | "explanation">[] }>(
+  return request<PublicQuestionsResponse>(
     `/questions/public?categoryId=${categoryId}&limit=100`,
   );
 }
@@ -267,9 +186,20 @@ export function getAttempt(id: number) {
   return request<Attempt>(`/attempts/${id}`);
 }
 
+/** Simpan jawaban sementara tanpa mengakhiri pengerjaan. */
+export function saveAttemptAnswers(
+  id: number,
+  answers: SubmitAttemptInput["answers"],
+) {
+  return request<Attempt>(`/attempts/${id}/answers`, {
+    method: "PATCH",
+    body: JSON.stringify({ answers }),
+  });
+}
+
 export function submitAttempt(
   id: number,
-  answers: { questionId: number; answer: string }[],
+  answers: SubmitAttemptInput["answers"],
 ) {
   return request<Attempt>(`/attempts/${id}/answers`, {
     method: "POST",

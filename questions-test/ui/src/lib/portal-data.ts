@@ -1,6 +1,10 @@
-import type { Difficulty, QuestionOption } from "./mock-data"
+import type {
+  CategoryMeta,
+  PortalDashboard,
+  QuizSession,
+} from "./types/portal"
 
-export const portalDashboard = {
+export const portalDashboard: PortalDashboard = {
   targetWeekly: { done: 14, total: 20 },
   metrics: {
     sessionsCompleted: 28,
@@ -13,16 +17,6 @@ export const portalDashboard = {
     correct: 240,
     totalItems: 278,
   },
-}
-
-export type CategoryMeta = {
-  badgeLabel: string
-  badgeClass: string
-  tags: string[]
-  avgScore: number
-  students: number
-  difficulty: string
-  level: string
 }
 
 export const categoryMeta: Record<string, CategoryMeta> = {
@@ -81,28 +75,6 @@ export const categoryMeta: Record<string, CategoryMeta> = {
     difficulty: "Mudah – Sedang",
     level: "Semua Level",
   },
-}
-
-export type QuizQuestion = {
-  id: string
-  number: number
-  topic: string
-  difficulty: Difficulty
-  stimulus?: string
-  prompt: string
-  options: QuestionOption[]
-  answer: string
-  guide?: string
-  explanation: string
-}
-
-export type QuizSession = {
-  id: string
-  title: string
-  packageLabel: string
-  categoryId: string
-  durationLimitMinutes: number
-  questions: QuizQuestion[]
 }
 
 export const quizSession: QuizSession = {
